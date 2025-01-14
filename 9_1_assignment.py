@@ -60,17 +60,17 @@ Find the min, max, and sum of elements of the second column of array `res3`.
 """
 
 # Min
-res_min = np.min(res3)
+res_min = np.min(res3[:, 1])
 
 print('min =', res_min)
 
 # Max
-res_max = np.max(res3)
+res_max = np.max(res3[:, 1])
 
 print('max =', res_max)
 
 # Sum
-res_sum = np.sum(res3)
+res_sum = np.sum(res3[:, 1])
 
 print('sum =', res_sum)
 
@@ -99,7 +99,24 @@ We will be working on the classic dataset for beginner data scientists: Titanic 
 Load the dataset from the following URL: https://web.stanford.edu/class/cs102/datasets/Titanic.csv
 """
 
-df = pd.read_csv("https://web.stanford.edu/class/cs102/datasets/Titanic.csv")
+import os
+
+
+file_name = "Titanic.csv"
+file_url = "https://web.stanford.edu/class/cs102/datasets/Titanic.csv"
+
+if not os.path.exists(file_name):
+    print("File does not exist!")
+
+    df = pd.read_csv(file_url)
+
+    df.to_csv(file_name, index=False)
+    print("file downloaded")
+
+else:
+    print("File Already Exists!")
+
+    df = pd.read_csv(file_name)
 
 """### Task 8
 
@@ -125,7 +142,7 @@ print(df.columns)
 Remove the two original columns - last, first.
 """
 
-df = df.drop([df.columns[0], df.columns[-1]], axis=1)
+df.drop([df.columns[0], df.columns[-1]], axis=1, inplace=True)
 print(df.columns)
 
 """### Task 11
@@ -133,10 +150,7 @@ print(df.columns)
 Calculate the total number of survivors in the dataset.
 """
 
-# count = df['survived'].value_counts()
-# print(count)
-# print()
-survived_count = count[1]
-print(f"total number of survivors: {survived_count}")
-print()
+survived_mask = df['survived'] == 'yes'
+survived_count = survived_mask.sum()
+print(f"Total number of survivors: {survived_count}")
 
